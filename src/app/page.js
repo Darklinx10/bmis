@@ -1,20 +1,23 @@
-/** This file is used to redirect users based on their authentication status */
-'use client';
-import { useAuth } from "@/context/AuthContext";
+// pages/index.jsx
+"use client";
+
+import { useAuth } from "@/contexts/authcontext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function IndexPage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (user) {
-      router.replace("/Dashboard");
-    } else {
-      router.replace("/Authentication/login");
-    }
-  }, [user, router]);
+    if (loading) return; // Don't redirect until auth state is known
 
-  return null; // Or show a loading spinner
+    if (user) {
+      router.replace("/homePage");
+    } else {
+      router.replace("/auth/login");
+    }
+  }, [user, loading, router]);
+
+  return null; // or <div>Loading...</div>
 }
